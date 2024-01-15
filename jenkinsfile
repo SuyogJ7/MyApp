@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    // Build Docker image
+                    docker.build("my-node-react-app")
+
+                    // Push Docker image to the specified Docker registry
+                    docker.withRegistry('https://hub.docker.com/repository/docker/suyogj9/devops_cicd_pipeline/general', '8a3e64d4-a2e5-4b9a-ba68-e681c6fce331') {
+                        docker.image("my-node-react-app").push("${env.BUILD_NUMBER}")
+                    }
+                }
+            }
+        }
+
+        // Add more stages as needed
+    }
+
+    post {
+        always {
+            echo 'This stage will always run'
+        }
+    }
+}
+
